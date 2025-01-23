@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Bouncing Logo Animation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #e5e5e5;
+            margin: 0;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        #logo-inputs {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #animation-container {
+            width: 90vw;
+            height: 90vh;
+            max-width: 1000px;
+            max-height: 800px;
+            position: relative;
+            background-color: #000;
+            overflow: hidden;
+            border: 5px solid #007BFF;
+            border-radius: 10px;
+        }
+
+        #logo {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            transition: background-color 0.3s;
+            background-color: #FF5733;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        window.onload = function() {
+            document.body.style.fontSize = '16px';
+        }
+    </script>
+    <div id="logo-inputs">
+        <h2>Bouncing Square</h2>
+        <button onclick="startAnimation()">Start Animation!</button>
+        <button onclick="changeSpeed('increase')">Increase Speed</button>
+        <button onclick="changeSpeed('decrease')">Decrease Speed</button>
+    </div>
+    <div id="animation-container">
+        <div id="logo"></div>
+    </div>
+
+    <script>
+        const logo = document.getElementById("logo");
+        const bounceArea = {
+            width: document.getElementById("animation-container").offsetWidth,
+            height: document.getElementById("animation-container").offsetHeight
+        };
+
+        let posX = Math.random() * (bounceArea.width - 100);
+        let posY = Math.random() * (bounceArea.height - 100);
+        let velocityX = 2;
+        let velocityY = 2;
+        let speedFactor = 1;
+
+        function startAnimation() {
+            posX = Math.random() * (bounceArea.width - 100);
+            posY = Math.random() * (bounceArea.height - 100);
+            updatePosition();
+        }
+
+        function updatePosition() {
+            posX += velocityX * speedFactor;
+            posY += velocityY * speedFactor;
+
+            if (posX + logo.clientWidth >= bounceArea.width || posX <= 0) {
+                velocityX = -velocityX;
+                changeLogoColor();
+            }
+            if (posY + logo.clientHeight >= bounceArea.height || posY <= 0) {
+                velocityY = -velocityY;
+                changeLogoColor();
+            }
+
+            logo.style.transform = `translate(${posX}px, ${posY}px)`;
+            requestAnimationFrame(updatePosition);
+        }
+
+        function changeLogoColor() {
+            const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+            logo.style.backgroundColor = randomColor;
+        }
+
+        function changeSpeed(action) {
+            if (action === 'increase') {
+                speedFactor += 0.5;
+            } else if (action === 'decrease' && speedFactor > 0.5) {
+                speedFactor -= 0.5;
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            bounceArea.width = document.getElementById("animation-container").offsetWidth;
+            bounceArea.height = document.getElementById("animation-container").offsetHeight;
+        });
+    </script>
+</body>
+</html>
